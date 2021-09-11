@@ -2,6 +2,7 @@ package we.plugin.demo;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -38,6 +39,13 @@ public class DemoPluginFilter implements FizzPluginFilter {
                                     request.setBody(newRequestBody);
                                     String newRequestBodyType = MediaType.APPLICATION_ATOM_XML_VALUE;
                                     request.getHeaders().put(HttpHeaders.CONTENT_TYPE, Collections.singletonList(newRequestBodyType));
+                                    */
+
+                                    /* 直接响应客户端 abc 文本
+                                    if (true) {
+                                        ServerHttpResponse clientResp = exchange.getResponse();
+                                        return clientResp.writeWith(Mono.just(clientResp.bufferFactory().wrap("abc".getBytes())));
+                                    }
                                     */
 
                                     System.err.println("this is demo plugin"); // 本插件只输出这个
