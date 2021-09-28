@@ -1,5 +1,8 @@
 package we.plugin.demo;
 
+import org.reactivestreams.Publisher;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.NettyDataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -13,6 +16,7 @@ import we.plugin.FizzPluginFilter;
 import we.plugin.FizzPluginFilterChain;
 import we.proxy.Route;
 import we.spring.http.server.reactive.ext.FizzServerHttpRequestDecorator;
+import we.spring.http.server.reactive.ext.FizzServerHttpResponseDecorator;
 import we.util.Constants;
 import we.util.NettyDataBufferUtils;
 import we.util.WebUtils;
@@ -41,7 +45,6 @@ public class DemoPluginFilter implements FizzPluginFilter {
                        .flatMap(
                                 body -> {
                                     // String bodyStr = body.toString(StandardCharsets.UTF_8); // 请求体对应的字符串
-                                    // System.err.println("request body: " + bodyStr);
 
                                     // 若需调整转发到后端接口的请求体，可像下面这样设置新的体和类型
                                     /*
@@ -58,15 +61,12 @@ public class DemoPluginFilter implements FizzPluginFilter {
                                     }
                                     */
 
+                                    // Route route = WebUtils.getRoute(exchange); // 请求匹配的路由，下面改路由配置，相当于动态路由
+                                    // route.method(HttpMethod.HEAD/*改方法*/).nextHttpHostPort("http://127.0.0.1:6666"/*反向代理类型的路由，改地址*/);
+                                    // route.backendService("改目标服务");
+                                    // route.backendPath("改目标路径");
 
-//                                    Route route = WebUtils.getRoute(exchange);
-//                                    route.method(HttpMethod.HEAD/*改方法*/).nextHttpHostPort("http://127.0.0.1:6666"/*反向代理类型的路由，改地址*/);
-//                                    route.backendService("改目标服务");
-//                                    route.backendPath("改目标路径");
-//                                    request.setBody("改体");
-//                                    request.getHeaders().put("改", "头");
-
-
+                                    /* 调远程接口
                                     Mono<String> remoteRespBodyStrMono = webClient.post()
                                                                                   .uri("http://127.0.0.1:9094/@ypath")
                                                                                   .contentType(MediaType.APPLICATION_JSON)
@@ -83,15 +83,34 @@ public class DemoPluginFilter implements FizzPluginFilter {
                                                                                                                );
                                                                                           }
                                                                                   );
-
                                     return
                                     remoteRespBodyStrMono.flatMap(
                                             s -> {
                                                 System.err.println("http://127.0.0.1:9094/@ypath 响应体：" + s);
-                                                System.err.println("this is demo plugin"); // 本插件只输出这个
                                                 return FizzPluginFilterChain.next(exchange); // 执行后续插件或其它逻辑
                                             }
                                     );
+                                    */
+
+                                    System.err.println("this is demo plugin"); // 本插件只输出这个
+                                    return FizzPluginFilterChain.next(exchange); // 执行后续插件或其它逻辑
+
+                                    /*
+                                    ServerHttpResponse original = exchange.getResponse();
+                                    FizzServerHttpResponseDecorator fizzServerHttpResponseDecorator = new FizzServerHttpResponseDecorator(original) {
+                                        @Override
+                                        public Publisher<? extends DataBuffer> writeWith(DataBuffer remoteResponseBody) {
+                                            String str = remoteResponseBody.toString(StandardCharsets.UTF_8);
+                                            HttpHeaders headers = getDelegate().getHeaders();
+                                            headers.setContentType(MediaType.TEXT_PLAIN);
+                                            headers.remove(HttpHeaders.CONTENT_LENGTH);
+                                            NettyDataBuffer from = NettyDataBufferUtils.from("modified body: " + str);
+                                            return Mono.just(from);
+                                        }
+                                    };
+                                    ServerWebExchange build = exchange.mutate().response(fizzServerHttpResponseDecorator).build();
+                                    return FizzPluginFilterChain.next(build); // 执行后续插件或其它逻辑
+                                    */
                                 }
                        );
     }
