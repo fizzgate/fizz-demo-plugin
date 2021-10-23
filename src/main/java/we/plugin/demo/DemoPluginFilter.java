@@ -37,6 +37,7 @@ public class DemoPluginFilter implements FizzPluginFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, Map<String, Object> config) {
 
+        // 当前面应用了 RequestBodyPlugin.REQUEST_BODY_PLUGIN 插件，或者当前插件继承自 RequestBodyPlugin.REQUEST_BODY_PLUGIN，才能这样强转
         FizzServerHttpRequestDecorator request = (FizzServerHttpRequestDecorator) exchange.getRequest();
 
         return
@@ -95,7 +96,7 @@ public class DemoPluginFilter implements FizzPluginFilter {
                                     System.err.println("this is demo plugin"); // 本插件只输出这个
                                     return FizzPluginFilterChain.next(exchange); // 执行后续插件或其它逻辑
 
-                                    /*
+                                    /* 取到远程接口的响应，并修改，并响应客户端的例子
                                     ServerHttpResponse original = exchange.getResponse();
                                     FizzServerHttpResponseDecorator fizzServerHttpResponseDecorator = new FizzServerHttpResponseDecorator(original) {
                                         @Override

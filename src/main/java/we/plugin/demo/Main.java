@@ -62,6 +62,7 @@ import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfigurati
 import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration;
+import we.Fizz;
 import we.FizzAppContext;
 
 @SpringBootApplication(
@@ -155,6 +156,7 @@ public class Main {
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(Main.class);
-        FizzAppContext.appContext = springApplication.run(args);
+        Fizz.context = springApplication.run(args);
+        FizzAppContext.appContext = Fizz.context;
     }
 }
