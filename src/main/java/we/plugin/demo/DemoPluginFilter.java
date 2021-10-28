@@ -37,7 +37,8 @@ public class DemoPluginFilter implements FizzPluginFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, Map<String, Object> config) {
 
-        // 当前面应用了 RequestBodyPlugin.REQUEST_BODY_PLUGIN 插件，或者当前插件继承自 RequestBodyPlugin.REQUEST_BODY_PLUGIN，才能这样强转
+        // 当前面应用了 RequestBodyPlugin.REQUEST_BODY_PLUGIN 插件（可通过管理后台配置），或者当前插件继承自 RequestBodyPlugin.REQUEST_BODY_PLUGIN，才能这样强转
+        // 如果不需要修改请求体，则无需强转；FizzServerHttpRequestDecorator 提供了 setBody 方法，用于修改请求体
         FizzServerHttpRequestDecorator request = (FizzServerHttpRequestDecorator) exchange.getRequest();
 
         return
