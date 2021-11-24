@@ -37,7 +37,7 @@
     </properties>
 
     <repositories>
-        <repository>
+        <!--<repository>
             <id>spring-snapshots</id>
             <name>Spring Snapshots</name>
             <url>https://repo.spring.io/snapshot</url>
@@ -52,7 +52,7 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
     </repositories>
 
     <dependencyManagement></dependencyManagement>
