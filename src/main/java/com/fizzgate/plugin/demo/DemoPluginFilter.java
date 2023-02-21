@@ -1,29 +1,16 @@
-package we.plugin.demo;
+package com.fizzgate.plugin.demo;
 
-import org.reactivestreams.Publisher;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.NettyDataBuffer;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import we.config.ProxyWebClientConfig;
-import we.plugin.FizzPluginFilter;
-import we.plugin.FizzPluginFilterChain;
-import we.proxy.Route;
-import we.spring.http.server.reactive.ext.FizzServerHttpRequestDecorator;
-import we.spring.http.server.reactive.ext.FizzServerHttpResponseDecorator;
-import we.util.Constants;
-import we.util.NettyDataBufferUtils;
-import we.util.WebUtils;
+import com.fizzgate.config.ProxyWebClientConfig;
+import com.fizzgate.plugin.FizzPluginFilter;
+import com.fizzgate.plugin.FizzPluginFilterChain;
+import com.fizzgate.spring.http.server.reactive.ext.FizzServerHttpRequestDecorator;
+import com.fizzgate.util.NettyDataBufferUtils;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Map;
 
 @Component(DemoPluginFilter.DEMO_PLUGIN) // 必须，且为插件 id
